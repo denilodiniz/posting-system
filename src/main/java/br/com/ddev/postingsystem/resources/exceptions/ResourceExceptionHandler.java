@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import br.com.ddev.postingsystem.services.exceptions.NoContentException;
 import br.com.ddev.postingsystem.services.exceptions.ObjectNotFoundException;
 
 @ControllerAdvice
@@ -20,6 +21,11 @@ public class ResourceExceptionHandler {
 		String error = "Object not found.";
 		StandardError standardError = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(status).body(standardError);
+	}
+	
+	@ExceptionHandler(NoContentException.class)
+	public ResponseEntity<StandardError> noContent(NoContentException e) {
+		return ResponseEntity.noContent().build();
 	}
 	
 }
