@@ -22,7 +22,7 @@ public class UserService {
 			return userToDto(repository.findById(id).get());
 		}
 		else {
-			throw new ObjectNotFoundException("No user found with id: " + id);
+			throw new ObjectNotFoundException("User with ID " + id + " does not exist");
 		}
 	}
 
@@ -41,11 +41,30 @@ public class UserService {
 		return repository.save(dtoToUser(userDto));
 	}
 	
+	public void delete(String id) {
+		findById(id);
+		repository.deleteById(id);
+
+	}
+	
+	public User updata(UserDTO userDto) {
+		findById(userDto.getId());
+		User userData = dtoToUser(userDto);
+		User userUpdate = repository.findById(userData.getId()).get();
+		updataData(userUpdate, userData);
+		return repository.save(userUpdate);
+	}
+	
 	private UserDTO userToDto(User user) {
 		return new UserDTO(user);
 	}
 	
 	private User dtoToUser(UserDTO userDto) {
 		return new User(userDto.getId(), userDto.getName(), userDto.getEmail());
+	}
+	
+	private void updataData(User userUpdate, User userData) {
+		userUpdate.setName(userData.getName());
+		userUpdate.setEmail(userData.getEmail());
 	}
 }
