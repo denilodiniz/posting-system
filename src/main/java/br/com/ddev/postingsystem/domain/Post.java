@@ -9,10 +9,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import br.com.ddev.postingsystem.dto.AuthorDTO;
 
+
 @Document
 public class Post implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+
 	@Id
 	private String id;
 	private Date date;

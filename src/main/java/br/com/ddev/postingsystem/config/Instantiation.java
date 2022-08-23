@@ -17,19 +17,17 @@ import br.com.ddev.postingsystem.repositories.UserRepository;
 @Configuration
 public class Instantiation implements CommandLineRunner {
 
-	@Autowired
+	/*@Autowired
 	private UserRepository userRepository;
 	
 	@Autowired
-	private PostRepository postRepository;
-	
-	
+	private PostRepository postRepository;*/
 	
 	
 	@Override
 	public void run(String... args) throws Exception {
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 		
 		userRepository.deleteAll();
@@ -46,6 +44,10 @@ public class Instantiation implements CommandLineRunner {
 		Post post2 = new Post(null, sdf.parse("2022-08-21"), "Bom dia!", "Acordei faliz hoje!", new AuthorDTO(maria));
 		
 		postRepository.saveAll(Arrays.asList(post1, post2));
+		
+		maria.getPosts().addAll(Arrays.asList(post1, post2));
+		
+		userRepository.save(maria);*/
 
 	}
 
