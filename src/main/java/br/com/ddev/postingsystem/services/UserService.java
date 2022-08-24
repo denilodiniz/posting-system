@@ -1,6 +1,5 @@
 package br.com.ddev.postingsystem.services;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +25,7 @@ public class UserService {
 	public UserDTO findById(String id) {
 		if (repository.existsById(id)) {
 			User user = repository.findById(id).get();
-			UserDTO userDto = new UserDTO();
-			userDto.setId(user.getId());
-			userDto.setName(user.getName());
-			userDto.setEmail(user.getEmail());
-			userDto.setIdPosts(user.getPosts().stream().map(x -> x.getId()).toList());;
-			return userDto;
+			return createUserDtoWithIdPosts(user);
 		}
 		else {
 			throw new ObjectNotFoundException("User with ID " + id + " does not exist");
@@ -41,14 +35,9 @@ public class UserService {
 	public List<UserDTO> findAll() {
 		if (!repository.findAll().isEmpty()) {
 			List<User> listUsers = repository.findAll();
-			List<UserDTO> listUsersDto = new ArrayList<>();
-			for (User user : listUsers) {
-				UserDTO userDto = new UserDTO();
-				userDto.setId(user.getId());
-				userDto.setName(user.getName());
-				userDto.setEmail(user.getEmail());
-				listUsersDto.add(userDto);
-			}
+			List<UserDTO> listUsersDto = listUsers.stream()
+					.map(x -> createUserDto(x))
+					.toList();
 			return listUsersDto;
 		}
 		else {
@@ -56,22 +45,31 @@ public class UserService {
 		}
 	}
 	
-	public List<PostDTO> findAllPostsForIdUser(String id) {
+	public List<PostDTO> findAllPostsWithIdUser(String id) {
 		User user = repository.findById(id).get();
 		List<Post> listPost = user.getPosts();
-		List<PostDTO> listPostDto = new ArrayList<>();
-		for (Post post : listPost) {
-			PostDTO postDto = new PostDTO(post);
-			postDto.setAuthor(null);
-			listPostDto.add(postDto);
+		List<PostDTO> listPostDto = listPost.stream()
+				.map(x -> postService.createPostDto(x))
+				.toList();
+		if (!listPostDto.isEmpty()) {
+			return listPostDto;
 		}
-		return listPostDto;
+		else {
+			throw new NoContentException();
+		}
 	}
 	
-	public PostDTO findPostByIDForIdUser(String idUser, String idPost) {
-		PostDTO postDto = postService.findById(idPost);
-		postDto.setAuthor(null);
-		return postDto;	
+	public PostDTO findPostByIdWithIdUser(String idUser, String idPost) {
+		List<Post> listPost = repository.findById(idUser).get().getPosts();
+		List<PostDTO> listPostDto = listPost.stream()
+				.map(x -> postService.createPostDto(x))
+				.toList();
+		if (listPostDto.contains(postService.findById(idPost))) {
+			return postService.findById(idPost);
+		}
+		else {
+			throw new ObjectNotFoundException("Post with ID " + idPost + " does not exist.");
+		}
 	}
 	
 	public User insert(UserDTO userDto) {
@@ -91,9 +89,24 @@ public class UserService {
 		return repository.save(userUpdate);
 	}
 	
-	/*private UserDTO userToDto(User user) {
-		return new UserDTO(user);
-	}*/
+	private UserDTO createUserDtoWithIdPosts(User user) {
+		UserDTO userDto = new UserDTO();
+		userDto.setId(user.getId());
+		userDto.setName(user.getName());
+		userDto.setEmail(user.getEmail());
+		if (!user.getPosts().isEmpty()) {
+			userDto.setIdPosts(user.getPosts().stream().map(x -> x.getId()).toList());
+		}
+		return userDto;
+	}
+	
+	private UserDTO createUserDto(User user) {
+		UserDTO userDto = new UserDTO();
+		userDto.setId(user.getId());
+		userDto.setName(user.getName());
+		userDto.setEmail(user.getEmail());
+		return userDto;
+	}
 	
 	private User dtoToUser(UserDTO userDto) {
 		return new User(userDto.getId(), userDto.getName(), userDto.getEmail());

@@ -40,13 +40,13 @@ public class UserResource {
 	
 	@GetMapping(value = "/{id}/posts")
 	public ResponseEntity<List<PostDTO>> findAllPostsForIdUser(@PathVariable String id) {
-		List<PostDTO> listPostDto = service.findAllPostsForIdUser(id);
+		List<PostDTO> listPostDto = service.findAllPostsWithIdUser(id);
 		return ResponseEntity.ok().body(listPostDto);
 	}
 	
 	@GetMapping(value = "/{idUser}/posts/{idPost}")
 	public ResponseEntity<PostDTO> findPostByIDForIdUser(@PathVariable String idUser,@PathVariable String idPost) {
-		PostDTO postDto = service.findPostByIDForIdUser(idUser, idPost);
+		PostDTO postDto = service.findPostByIdWithIdUser(idUser, idPost);
 		return ResponseEntity.ok().body(postDto);
 	}
 	
