@@ -1,6 +1,7 @@
 package br.com.ddev.postingsystem.services;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,53 +24,64 @@ public class UserService {
 	private PostService postService;
 
 	public UserDTO findById(String id) {
-		if (repository.existsById(id)) {
+		try {
 			User user = repository.findById(id).get();
 			return createUserDtoWithIdPosts(user);
 		}
-		else {
+		catch (ObjectNotFoundException e) {
 			throw new ObjectNotFoundException("User with ID " + id + " does not exist");
 		}
 	}
 
 	public List<UserDTO> findAll() {
-		if (!repository.findAll().isEmpty()) {
+		try {
 			List<User> listUsers = repository.findAll();
 			List<UserDTO> listUsersDto = listUsers.stream()
 					.map(x -> createUserDto(x))
 					.toList();
 			return listUsersDto;
 		}
-		else {
+		catch (NoContentException e) {
 			throw new NoContentException();
 		}
 	}
 	
 	public List<PostDTO> findAllPostsWithIdUser(String id) {
-		User user = repository.findById(id).get();
-		List<Post> listPost = user.getPosts();
-		List<PostDTO> listPostDto = listPost.stream()
-				.map(x -> postService.createPostDto(x))
-				.toList();
-		if (!listPostDto.isEmpty()) {
-			return listPostDto;
+		try {
+			User user = repository.findById(id).get();
+			List<Post> listPost = user.getPosts();
+			List<PostDTO> listPostDto = listPost.stream()
+					.map(x -> postService.createPostDto(x))
+					.toList();
+			if (!listPostDto.isEmpty()) {
+				return listPostDto;
+			}
+			else {
+				throw new NoContentException();
+			}
 		}
-		else {
-			throw new NoContentException();
+		catch (NoSuchElementException e) {
+			throw new ObjectNotFoundException("User with ID " + id + " does not exist");
 		}
 	}
 	
 	public PostDTO findPostByIdWithIdUser(String idUser, String idPost) {
-		List<Post> listPost = repository.findById(idUser).get().getPosts();
-		List<PostDTO> listPostDto = listPost.stream()
-				.map(x -> postService.createPostDto(x))
-				.toList();
-		if (listPostDto.contains(postService.findById(idPost))) {
-			return postService.findById(idPost);
+		try {
+			List<Post> listPost = repository.findById(idUser).get().getPosts();
+			PostDTO postDto = listPost.stream()
+					.filter(x -> x.getId().equals(idPost))
+					.map(x -> postService.createPostDto(x))
+					.findAny().get();
+			return postDto;
 		}
-		else {
-			throw new ObjectNotFoundException("Post with ID " + idPost + " does not exist.");
-		}
+		catch (NoSuchElementException e) {
+			if (!repository.existsById(idUser)) {
+				throw new ObjectNotFoundException("User with ID " + idUser + " does not exist");
+			}
+			else {
+				throw new ObjectNotFoundException("Post with ID " + idPost + " does not exist");
+			}
+		}	
 	}
 	
 	public User insert(UserDTO userDto) {
