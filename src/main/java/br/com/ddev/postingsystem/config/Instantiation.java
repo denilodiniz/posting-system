@@ -1,8 +1,7 @@
 package br.com.ddev.postingsystem.config;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -17,20 +16,17 @@ import br.com.ddev.postingsystem.repositories.UserRepository;
 @Configuration
 public class Instantiation implements CommandLineRunner {
 
-	/*@Autowired
+	@Autowired
 	private UserRepository userRepository;
 	
 	@Autowired
-	private PostRepository postRepository;*/
+	private PostRepository postRepository;
 	
 	
 	@Override
 	public void run(String... args) throws Exception {
-
-		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 		
-		userRepository.deleteAll();
+		/*userRepository.deleteAll();
 		postRepository.deleteAll();
 		
 		
@@ -40,12 +36,15 @@ public class Instantiation implements CommandLineRunner {
 		
 		userRepository.saveAll(Arrays.asList(maria, alex, bob));
 		
-		Post post1 = new Post(null, sdf.parse("2022-08-20"), "Partiu viagem!", "Vou viajar para São Paulo. Abraços!", new AuthorDTO(maria));
-		Post post2 = new Post(null, sdf.parse("2022-08-21"), "Bom dia!", "Acordei faliz hoje!", new AuthorDTO(maria));
+		Post post1 = new Post(null, LocalDate.parse("2022-08-15"), "Novo Destino!", "Viajarei para São Paulo está semana!", new AuthorDTO(maria));
+		Post post2 = new Post(null, LocalDate.parse("2022-08-20"), "Partiu viagem!", "Vou viajar para São Paulo. Abraços!", new AuthorDTO(maria));
+		Post post3 = new Post(null, LocalDate.parse("2022-08-22"), "Cheguei SP!", "Houve alguns atrasos na viagem mas deu tudo certo!", new AuthorDTO(maria));
+		Post post4 = new Post(null, LocalDate.parse("2022-08-23"), "Dia de reunião!", "Primeiro dia de reunião na minha nova empresa. Me desejem sorte!", new AuthorDTO(maria));
+		Post post5 = new Post(null, LocalDate.parse("2022-08-25"), "Bom dia!", "Acordei faliz hoje!", new AuthorDTO(maria));
 		
-		postRepository.saveAll(Arrays.asList(post1, post2));
+		postRepository.saveAll(Arrays.asList(post1, post2, post3, post4, post5));
 		
-		maria.getPosts().addAll(Arrays.asList(post1, post2));
+		maria.getPosts().addAll(Arrays.asList(post1, post2, post3, post4, post5));
 		
 		userRepository.save(maria);*/
 

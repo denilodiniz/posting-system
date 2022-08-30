@@ -1,5 +1,6 @@
 package br.com.ddev.postingsystem.services;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Service;
 import br.com.ddev.postingsystem.domain.Post;
 import br.com.ddev.postingsystem.dto.PostDTO;
 import br.com.ddev.postingsystem.repositories.PostRepository;
-import br.com.ddev.postingsystem.services.exceptions.NoContentException;
 import br.com.ddev.postingsystem.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -27,15 +27,19 @@ public class PostService {
 	}
 	
 	public List<PostDTO> findAll() {
-		if (!repository.findAll().isEmpty()) {
 			List<PostDTO> listPostDto = repository.findAll().stream()
 					.map(x -> createPostDto(x))
 					.toList();
-			return listPostDto;
-		}
-		else {
-			throw new NoContentException();
-		}
+			return listPostDto;	
+	}
+	
+	public List<PostDTO> findByDateGreaterThanEqual(LocalDate date) {
+		String stringToDate = String.valueOf(date);
+		List<PostDTO> posts = repository.findByDateGreaterThanEqual(stringToDate)
+				.stream()
+				.map(x -> this.createPostDto(x))
+				.toList();
+		return posts;
 	}
 	
 	public PostDTO createPostDto(Post post) {

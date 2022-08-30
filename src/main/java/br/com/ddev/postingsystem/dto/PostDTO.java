@@ -1,7 +1,7 @@
 package br.com.ddev.postingsystem.dto;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -14,7 +14,7 @@ public class PostDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String id;
-	private Date date;
+	private LocalDate date;
 	private String title;
 	private String body;
 	private AuthorDTO author;
@@ -38,11 +38,11 @@ public class PostDTO implements Serializable {
 		this.id = id;
 	}
 
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 
