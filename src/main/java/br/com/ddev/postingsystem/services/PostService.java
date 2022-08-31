@@ -33,10 +33,12 @@ public class PostService {
 			return listPostDto;	
 	}
 	
-	public List<PostDTO> findByPostWithDateRange(LocalDate firstDate, LocalDate secondDate) {
-		List<Post> posts = repository.findByPostWithDateRange(firstDate, secondDate);
-		List<PostDTO>postsDto = posts.stream().map(x -> this.createPostDto(x)).toList();
-		return postsDto;
+	public List<PostDTO> findByDateGreaterThanEqual(LocalDate date) {
+		List<PostDTO> posts = repository.findByDateGreaterThanEqual(date)
+				.stream()
+				.map(x -> this.createPostDto(x))
+				.toList();
+		return posts;
 	}
 	
 	public PostDTO createPostDto(Post post) {

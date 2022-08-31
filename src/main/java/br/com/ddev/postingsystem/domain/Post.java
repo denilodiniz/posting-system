@@ -6,7 +6,6 @@ import java.util.Objects;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import br.com.ddev.postingsystem.dto.AuthorDTO;
 

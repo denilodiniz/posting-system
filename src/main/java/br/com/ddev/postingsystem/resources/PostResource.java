@@ -22,10 +22,9 @@ public class PostResource {
 	private PostService service;
 	
 	@GetMapping
-	public ResponseEntity<List<PostDTO>> findByPostWithDateRange(
-			@RequestParam(value = "firstDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate firstDate,
-			@RequestParam(value = "secondDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate secondDate) {
-		List<PostDTO> posts = service.findByPostWithDateRange(firstDate, secondDate);
+	public ResponseEntity<List<PostDTO>> findByDateGreaterThanEqual(
+			@RequestParam(value = "date", defaultValue = "2022-01-01") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+		List<PostDTO> posts = service.findByDateGreaterThanEqual(date);
 		return ResponseEntity.ok().body(posts);
 	}
 	
