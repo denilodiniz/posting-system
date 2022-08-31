@@ -1,5 +1,6 @@
 package br.com.ddev.postingsystem.repositories;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -11,7 +12,7 @@ import br.com.ddev.postingsystem.domain.Post;
 @Repository
 public interface PostRepository extends MongoRepository<Post, String>{
 
-	@Query("{date: {$gte: new Date('?0')}}")
-	public List<Post> findByDateGreaterThanEqual(String date);
+	@Query("db.getCollection('post').find({date: {$gte: ISODate(\"?0\"), $lte: ISODate(\"?1\")}})")
+	public List<Post> findByPostWithDateRange(LocalDate firstDate, LocalDate secondDate);
 	
 }
