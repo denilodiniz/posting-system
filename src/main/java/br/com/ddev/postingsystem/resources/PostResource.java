@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +27,12 @@ public class PostResource {
 			@RequestParam(value = "date", defaultValue = "2022-01-01") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
 		List<PostDTO> posts = service.findByDateGreaterThanEqual(date);
 		return ResponseEntity.ok().body(posts);
+	}
+	
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<PostDTO> findById(@PathVariable String id) {
+		PostDTO postDto = service.findById(id);
+		return ResponseEntity.ok().body(postDto);
 	}
 	
 }
