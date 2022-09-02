@@ -23,12 +23,8 @@ public class UserService {
 	private PostService postService;
 
 	public UserDTO findById(String id) {
-		try {
-			return createUserDtoWithIdPosts(repository.findById(id).get());
-		}
-		catch (NoSuchElementException e) {
-			throw new ObjectNotFoundException("User with ID " + id + " does not exist");
-		}
+		return createUserDtoWithIdPosts(repository.findById(id)
+				.orElseThrow(() -> new ObjectNotFoundException("User with ID " + id + " does not exist")));
 	}
 
 	public List<UserDTO> findAll() {
@@ -93,9 +89,7 @@ public class UserService {
 		userDto.setId(user.getId());
 		userDto.setName(user.getName());
 		userDto.setEmail(user.getEmail());
-		if (!user.getPosts().isEmpty()) {
-			userDto.setIdPosts(user.getPosts().stream().map(x -> x.getId()).toList());
-		}
+		userDto.setIdPosts(user.getPosts().stream().map(x -> x.getId()).toList());
 		return userDto;
 	}
 	
@@ -108,7 +102,11 @@ public class UserService {
 	}
 	
 	private User dtoToUser(UserDTO userDto) {
-		return new User(userDto.getId(), userDto.getName(), userDto.getEmail());
+		User user = new User();
+		user.setId(userDto.getId());
+		user.setName(userDto.getName());
+		user.setEmail(userDto.getEmail());
+		return user;
 	}
 	
 	private void updataData(User userUpdate, User userData) {

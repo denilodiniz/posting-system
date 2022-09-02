@@ -2,7 +2,6 @@ package br.com.ddev.postingsystem.services;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,12 +18,8 @@ public class PostService {
 	private PostRepository repository;
 	
 	public PostDTO findById(String id) {
-		try {
-			return createPostDtoWithAuthor(repository.findById(id).get());
-		}
-		catch (NoSuchElementException e) {
-			throw new ObjectNotFoundException("Post with ID " + id + " does not exist");
-		}
+			return createPostDtoWithAuthor(repository.findById(id)
+					.orElseThrow(() -> new ObjectNotFoundException("Post with ID " + id + " does not exist")));
 	}
 	
 	public List<PostDTO> findAll() {
@@ -48,6 +43,7 @@ public class PostService {
 		postDto.setDate(post.getDate());
 		postDto.setTitle(post.getTitle());
 		postDto.setBody(post.getBody());
+		postDto.setComments(post.getComments());
 		return postDto;
 	}
 	
