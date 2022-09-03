@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ddev.postingsystem.dto.PostDTO;
+import br.com.ddev.postingsystem.resources.util.DecodeUrl;
 import br.com.ddev.postingsystem.services.PostService;
 
 @RestController
@@ -33,6 +34,30 @@ public class PostResource {
 	public ResponseEntity<PostDTO> findById(@PathVariable String id) {
 		PostDTO postDto = service.findById(id);
 		return ResponseEntity.ok().body(postDto);
+	}
+	
+	@GetMapping(value = "/titlesearch")
+	public ResponseEntity<List<PostDTO>> findAllTitleContaining(@RequestParam(value = "text", defaultValue = "") String text) {
+		text = DecodeUrl.decodeParam(text);
+		List<PostDTO> posts = service.findByBodyContainig(text);
+		return ResponseEntity.ok().body(posts);
+	}
+	
+	@GetMapping(value = "/bodysearch")
+	public ResponseEntity<List<PostDTO>> findPostsWithTextInBody(@RequestParam(value = "text", defaultValue = "") String text) {
+		text = DecodeUrl.decodeParam(text);
+		List<PostDTO> posts = service.findPostsWithTextInBody(text);
+		return ResponseEntity.ok().body(posts);
+	}
+	
+	@GetMapping(value = "titleanddate")
+	public ResponseEntity<List<PostDTO>> findPostsWithRangeDateAndTextInPost(
+			@RequestParam(value = "text", defaultValue = "") String text,
+			@RequestParam(value = "firstDate", defaultValue = "2022-01-01") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate firstDate,
+			@RequestParam(value = "lastDate", defaultValue = "2022-01-01") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate lastDate) {
+		text = DecodeUrl.decodeParam(text);
+		List<PostDTO> posts = service.findPostsWithRangeDateAndTextInPost(text, firstDate, lastDate);
+		return ResponseEntity.ok().body(posts);
 	}
 	
 }

@@ -37,6 +37,30 @@ public class PostService {
 		return posts;
 	}
 	
+	public List<PostDTO> findByBodyContainig(String text) {
+		List<PostDTO> posts = repository.findByTitleContainingIgnoreCase(text)
+				.stream()
+				.map(x -> createPostDto(x))
+				.toList();
+		return posts;
+	}
+	
+	public List<PostDTO> findPostsWithTextInBody(String text) {
+		List<PostDTO> posts = repository.findPostsWithTextInBody(text)
+				.stream()
+				.map(x -> createPostDto(x))
+				.toList();
+		return posts;
+	}
+	
+	public List<PostDTO> findPostsWithRangeDateAndTextInPost(String text, LocalDate firstDate, LocalDate lastDate) {
+		List<PostDTO> posts = repository.findPostsWithRangeDateAndTextInPost(text, firstDate, lastDate)
+				.stream()
+				.map(x -> createPostDto(x))
+				.toList();
+		return posts;
+	}
+	
 	public PostDTO createPostDto(Post post) {
 		PostDTO postDto = new PostDTO();
 		postDto.setId(post.getId());
