@@ -50,7 +50,7 @@ public class PostResource {
 		return ResponseEntity.ok().body(posts);
 	}
 	
-	@GetMapping(value = "titleanddate")
+	@GetMapping(value = "titledate")
 	public ResponseEntity<List<PostDTO>> findPostsWithRangeDateAndTextInPost(
 			@RequestParam(value = "text", defaultValue = "") String text,
 			@RequestParam(value = "firstDate", defaultValue = "2022-01-01") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate firstDate,
